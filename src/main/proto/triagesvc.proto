@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package com.battre.stubs.triagesvc;
+
+option java_package = "com.battre.stubs.services";
+option java_multiple_files = true;
+
+service TriageSvc {
+    rpc callSpecSvcRandBattery(TriageSvcEmptyRequest) returns (TriageSvcEmptyResponse);
+}
+
+message TriageSvcEmptyRequest {
+}
+
+message TriageSvcEmptyResponse {
+}
+
+message TriageSvcRequest {
+      string message = 1;
+}
+
+message TriageSvcResponse {
+      string response = 1;
+}
