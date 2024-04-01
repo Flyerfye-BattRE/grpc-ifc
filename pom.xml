@@ -5,9 +5,10 @@
 
 	<groupId>com.battre</groupId>
 	<artifactId>grpc-ifc</artifactId>
-	<version>v0.0.1-SNAPSHOT</version>
-	<name>battre-grpc-interface</name>
+	<version>v0.0.2-SNAPSHOT</version>
+	<name>grpc-ifc</name>
 	<description>Raw protobuf files corresponding to java model and service classes for BattRe</description>
+	<packaging>jar</packaging>
 
 	<properties>
 		<java.version>17</java.version>
