@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package com.battre.stubs.labsvc;
+
+option java_package = "com.battre.stubs.services";
+option java_multiple_files = true;
+
+service LabSvc {
+  rpc processLabBatteries(ProcessLabBatteriesRequest) returns (ProcessLabBatteriesResponse);
+}
+
+message BatteryIdType {
+  int32 batteryId = 1;
+  int32 batteryTypeId = 2;
+}
+
+message ProcessLabBatteriesRequest {
+  repeated BatteryIdType batteryIdTypes = 1;
+}
+
+message ProcessLabBatteriesResponse {
+  bool success = 1;
+}

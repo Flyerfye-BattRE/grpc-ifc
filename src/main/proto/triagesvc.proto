@@ -6,19 +6,12 @@ option java_package = "com.battre.stubs.services";
 option java_multiple_files = true;
 
 service TriageSvc {
-    rpc callSpecSvcRandBattery(TriageSvcEmptyRequest) returns (TriageSvcEmptyResponse);
+    rpc generateIntakeBatteryOrder(generateIntakeBatteryOrderRequest) returns (generateIntakeBatteryOrderResponse);
 }
 
-message TriageSvcEmptyRequest {
+message generateIntakeBatteryOrderRequest {
 }
 
-message TriageSvcEmptyResponse {
-}
-
-message TriageSvcRequest {
-      string message = 1;
-}
-
-message TriageSvcResponse {
-      string response = 1;
+message generateIntakeBatteryOrderResponse {
+  bool success = 1;
 }

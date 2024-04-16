@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package com.battre.stubs.storagesvc;
+
+option java_package = "com.battre.stubs.services";
+option java_multiple_files = true;
+
+service StorageSvc {
+  rpc tryStoreBatteries(StoreBatteryRequest) returns (StoreBatteryResponse);
+}
+
+message BatteryStorageInfo {
+  int32 batteryId = 1;
+  int32 batteryTier = 2;
+}
+
+message StoreBatteryRequest {
+  int32 orderId = 1;
+  repeated BatteryStorageInfo batteries = 2;
+}
+
+message StoreBatteryResponse {
+    bool success = 1;
+}

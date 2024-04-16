@@ -6,16 +6,32 @@ option java_package = "com.battre.stubs.services";
 option java_multiple_files = true;
 
 service SpecSvc {
-  rpc getRandomBatteryType(SpecSvcEmptyRequest) returns (SpecSvcResponse);
+  rpc getRandomBatteryTypes(GetRandomBatteryTypesRequest) returns (GetRandomBatteryTypesResponse);
+  rpc getBatteryTerminalLayouts(GetBatteryTerminalLayoutsRequest) returns (GetBatteryTerminalLayoutsResponse);
 }
 
-message SpecSvcEmptyRequest {
+message GetRandomBatteryTypesRequest {
+  int32 numBatteryTypes = 1;
 }
 
-message SpecSvcRequest {
-  string message = 1;
+message BatteryTypeTierPair {
+  int32 batteryTypeId = 1;
+  int32 batteryTierId = 2;
 }
 
-message SpecSvcResponse {
-  string response = 1;
+message GetRandomBatteryTypesResponse {
+  repeated BatteryTypeTierPair batteries = 1;
+}
+
+message GetBatteryTerminalLayoutsRequest {
+  repeated int32 batteryTypeIds = 1;
+}
+
+message BatteryTypeTerminalPair {
+  int32 batteryTypeId = 1;
+  int32 batteryTerminalLayoutId = 2;
+}
+
+message GetBatteryTerminalLayoutsResponse {
+  repeated BatteryTypeTerminalPair batteries = 1;
 }
