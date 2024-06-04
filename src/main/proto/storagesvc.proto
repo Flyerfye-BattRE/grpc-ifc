@@ -7,7 +7,8 @@ option java_multiple_files = true;
 
 service StorageSvc {
   rpc tryStoreBatteries(StoreBatteryRequest) returns (StoreBatteryResponse);
-  rpc removeBattery(RemoveBatteryRequest) returns (RemoveBatteryResponse);
+  rpc removeStorageBattery(RemoveStorageBatteryRequest) returns (RemoveStorageBatteryResponse);
+  rpc getStorageStats(GetStorageStatsRequest) returns (GetStorageStatsResponse);
 }
 
 message BatteryStorageInfo {
@@ -24,10 +25,23 @@ message StoreBatteryResponse {
     bool success = 1;
 }
 
-message RemoveBatteryRequest {
+message RemoveStorageBatteryRequest {
   int32 batteryId = 1;
 }
 
-message RemoveBatteryResponse {
+message RemoveStorageBatteryResponse {
   bool success = 1;
+}
+
+message GetStorageStatsRequest {
+}
+
+message GetStorageStatsResponse {
+  repeated TierStats tierStatsList = 1;
+}
+
+message TierStats {
+  int32 batteryTierId = 1;
+  int32 availStorage = 2;
+  int32 capacity = 3;
 }

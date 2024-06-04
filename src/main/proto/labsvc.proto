@@ -5,8 +5,21 @@ package com.battre.stubs.labsvc;
 option java_package = "com.battre.stubs.services";
 option java_multiple_files = true;
 
+import "google/protobuf/timestamp.proto";
+
 service LabSvc {
   rpc processLabBatteries(ProcessLabBatteriesRequest) returns (ProcessLabBatteriesResponse);
+  rpc getCurrentLabPlans(GetLabPlanRequest) returns (GetLabPlanResponse);
+  rpc getLabPlans(GetLabPlanRequest) returns (GetLabPlanResponse);
+  rpc getCurrentTesterBacklog(GetTesterBacklogRequest) returns (GetTesterBacklogResponse);
+  rpc getTesterBacklog(GetTesterBacklogRequest) returns (GetTesterBacklogResponse);
+  rpc getCurrentRefurbPlans(GetRefurbPlanRequest) returns (GetRefurbPlanResponse);
+  rpc getRefurbPlans(GetRefurbPlanRequest) returns (GetRefurbPlanResponse);
+  rpc changeBatteryTesterPriority(ChangeBatteryTesterPriorityRequest) returns (ChangeBatteryTesterPriorityResponse);
+  rpc changeBatteryRefurbPriority(ChangeBatteryRefurbPriorityRequest) returns (ChangeBatteryRefurbPriorityResponse);
+  rpc getTesterMaintenanceLogs(GetTesterMaintenanceLogsRequest) returns (GetTesterMaintenanceLogsResponse);
+  rpc getRefurbMaintenanceLogs(GetRefurbMaintenanceLogsRequest) returns (GetRefurbMaintenanceLogsResponse);
+  rpc removeLabBattery(RemoveLabBatteryRequest) returns (RemoveLabBatteryResponse);
 }
 
 message BatteryIdType {
@@ -19,5 +32,143 @@ message ProcessLabBatteriesRequest {
 }
 
 message ProcessLabBatteriesResponse {
+  bool success = 1;
+}
+
+message GetLabPlanRequest {
+}
+
+message GetLabPlanResponse {
+  repeated LabPlan labPlanList= 1;
+}
+
+message LabPlan {
+  int32 labPlanId = 1;
+  LabPlanStatus labPlanStatus = 2;
+  string labPlanStartDate = 3;
+  string labPlanEndDate = 4;
+  int32 batteryId = 5;
+  int32 testerRecordId = 6;
+  int32 refurbPlanId = 7;
+}
+
+enum LabPlanStatus {
+  UNKNOWN = 0;
+  TESTER_BACKLOG_NEW = 1;
+  TESTER_BACKLOG_RETRY = 2;
+  TESTER_REJECTED = 3;
+  REFURB_BACKLOG_NEW = 4;
+  REFURB_BACKLOG_CONT = 5;
+  REFURB_BACKLOG_RETRY = 6;
+  REFURB_REJECTED = 7;
+  PASS = 8;
+  DESTROYED = 9;
+  LOST = 10;
+}
+
+message GetTesterBacklogRequest {
+}
+
+message GetTesterBacklogResponse {
+  repeated TesterBacklog testerBacklogList= 1;
+}
+
+message TesterBacklog {
+  int32 testerBacklogId = 1;
+  int32 batteryId = 2;
+  int32 testerBacklogPriority = 3;
+  google.protobuf.Timestamp testerBacklogStartDate = 4;
+  google.protobuf.Timestamp testerBacklogEndDate = 5;
+}
+
+message GetRefurbPlanRequest {
+}
+
+message GetRefurbPlanResponse {
+  repeated RefurbPlan refurbPlanList= 1;
+}
+
+message RefurbPlan {
+  int32 refurbPlanId = 1;
+  int32 batteryId = 2;
+  int32 refurbPlanPriority = 3;
+  google.protobuf.Timestamp refurbPlanStartDate = 4;
+  google.protobuf.Timestamp refurbPlanEndDate = 5;
+  bool available = 6;
+  bool resolder = 7;
+  int32 resolderRecordId = 8;
+  bool repack = 9;
+  int32 repackRecordId = 10;
+  bool processorSwap = 11;
+  int32 processorSwapRecordId = 12;
+  bool capacitorSwap = 13;
+  int32 capacitorSwapRecordId = 14;
+}
+
+message ChangeBatteryTesterPriorityRequest {
+  int32 batteryId = 1;
+  int32 priority = 2;
+}
+
+message ChangeBatteryTesterPriorityResponse {
+  bool success = 1;
+}
+
+message ChangeBatteryRefurbPriorityRequest {
+  int32 batteryId = 1;
+  int32 priority = 2;
+}
+
+message ChangeBatteryRefurbPriorityResponse {
+  bool success = 1;
+}
+
+message GetTesterMaintenanceLogsRequest {
+}
+
+message GetTesterMaintenanceLogsResponse {
+  repeated TesterStation testerStationList = 1;
+}
+
+message TesterStation {
+  int32 testerStnId = 1;
+  int32 terminalLayoutId = 2;
+  bool inUse = 3;
+  int32 activeBatteryId = 4;
+  google.protobuf.Timestamp lastActiveDate = 5;
+  google.protobuf.Timestamp lastCalibrationDate = 6;
+  google.protobuf.Timestamp nextCalibrationDate = 7;
+}
+
+message GetRefurbMaintenanceLogsRequest {
+}
+
+message GetRefurbMaintenanceLogsResponse {
+  repeated RefurbStation refurbStationList = 1;
+}
+
+enum RefurbStationClass {
+  UNKNOWN_REFURB = 0;
+  RESOLDER = 1;
+  REPACK = 2;
+  PROCESSOR_SWAP = 3;
+  CAPACITOR_SWAP = 4;
+}
+
+message RefurbStation {
+  int32 refurbStnId = 1;
+  RefurbStationClass refurbStationClass = 2;
+  bool inUse = 3;
+  int32 activeBatteryId = 4;
+  google.protobuf.Timestamp lastActiveDate = 5;
+  google.protobuf.Timestamp lastCalibrationDate = 6;
+  google.protobuf.Timestamp nextCalibrationDate = 7;
+}
+
+message RemoveLabBatteryRequest {
+  int32 batteryId = 1;
+}
+
+message RemoveLabBatteryResponse {
   bool success = 1;
 }

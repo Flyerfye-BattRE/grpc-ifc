@@ -9,6 +9,13 @@ service OpsSvc {
   rpc processIntakeBatteryOrder(ProcessIntakeBatteryOrderRequest) returns (ProcessIntakeBatteryOrderResponse);
   rpc updateBatteryStatus(UpdateBatteryStatusRequest) returns (UpdateBatteryStatusResponse);
   rpc updateBatteriesStatuses(UpdateBatteriesStatusesRequest) returns (UpdateBatteriesStatusesResponse);
+  rpc getCurrentBatteryInventory(GetBatteryInventoryRequest) returns (GetBatteryInventoryResponse);
+  rpc getBatteryInventory(GetBatteryInventoryRequest) returns (GetBatteryInventoryResponse);
+  rpc destroyBattery(DestroyBatteryRequest) returns (DestroyBatteryResponse);
+  rpc getCustomerList(GetCustomerListRequest) returns (GetCustomerListResponse);
+  rpc addCustomer(AddCustomerRequest) returns (AddCustomerResponse);
+  rpc removeCustomer(RemoveCustomerRequest) returns (RemoveCustomerResponse);
+  rpc updateCustomer(UpdateCustomerRequest) returns (UpdateCustomerResponse);
 }
 
 message BatteryTypeTierCount {
@@ -53,9 +60,74 @@ message UpdateBatteryStatusResponse {
 }
 
 message UpdateBatteriesStatusesRequest {
-  repeated BatteryIdStatus batteries = 1;
+  repeated BatteryIdStatus batteryList = 1;
 }
 
 message UpdateBatteriesStatusesResponse {
+  bool success = 1;
+}
+
+message GetBatteryInventoryRequest {
+}
+
+message GetBatteryInventoryResponse {
+  repeated Battery batteryList = 1;
+}
+
+message Battery {
+  int32 batteryId = 1;
+  BatteryStatus batteryStatus = 2;
+  int32 batteryTypeId = 3;
+  int32 intakeOrderId = 4;
+  int32 holdId = 5;
+  int32 outputOrderId = 6;
+}
+
+message DestroyBatteryRequest {
+  int32 batteryId = 1;
+}
+
+message DestroyBatteryResponse {
+  bool success = 1;
+}
+
+message GetCustomerListRequest {
+}
+
+message GetCustomerListResponse {
+  repeated Customer customerList = 1;
+}
+
+message AddCustomerRequest {
+  Customer customer = 1;
+}
+
+message AddCustomerResponse {
+  bool success = 1;
+}
+
+message Customer {
+  int32 customerId = 1;
+  string lastName = 2;
+  string firstName = 3;
+  string email = 4;
+  string phone = 5;
+  string address = 6;
+  string loyaltyId = 7;
+}
+
+message RemoveCustomerRequest {
+  int32 customerId = 1;
+}
+
+message RemoveCustomerResponse {
+  bool success = 1;
+}
+
+message UpdateCustomerRequest {
+  Customer customer = 1;
+}
+
+message UpdateCustomerResponse {
   bool success = 1;
 }

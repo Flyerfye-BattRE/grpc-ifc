@@ -8,6 +8,8 @@ option java_multiple_files = true;
 service SpecSvc {
   rpc getRandomBatteryTypes(GetRandomBatteryTypesRequest) returns (GetRandomBatteryTypesResponse);
   rpc getBatteryTerminalLayouts(GetBatteryTerminalLayoutsRequest) returns (GetBatteryTerminalLayoutsResponse);
+  rpc getAllBatterySpecs(GetAllBatterySpecsRequest) returns (GetAllBatterySpecsResponse);
+  rpc getBatteryTiers(GetBatteryTiersRequest) returns (GetBatteryTiersResponse);
 }
 
 message GetRandomBatteryTypesRequest {
@@ -34,4 +36,35 @@ message BatteryTypeTerminalPair {
 
 message GetBatteryTerminalLayoutsResponse {
   repeated BatteryTypeTerminalPair batteries = 1;
+}
+
+message GetBatteryTiersRequest {
+}
+
+message GetBatteryTiersResponse {
+  repeated BatteryTier batteryTierList = 1;
+}
+
+message BatteryTier {
+  int32 batteryTierId = 1;
+  string batteryTierLabel = 2;
+}
+
+message GetAllBatterySpecsRequest {
+}
+
+message GetAllBatterySpecsResponse {
+  repeated BatterySpecs batterySpecsList = 1;
+}
+
+message BatterySpecs {
+  int32 battery_type_id = 1;
+  string mfc = 2;
+  int32 battery_tier_id = 3;
+  string composition = 4;
+  string safety_info = 5;
+  double min_voltage = 6;
+  double max_voltage = 7;
+  double min_current = 8;
+  double max_current = 9;
 }
