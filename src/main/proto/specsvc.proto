@@ -5,6 +5,8 @@ package com.battre.stubs.specsvc;
 option java_package = "com.battre.stubs.services";
 option java_multiple_files = true;
 
+import "google/protobuf/wrappers.proto";
+
 service SpecSvc {
   rpc getRandomBatteryTypes(GetRandomBatteryTypesRequest) returns (GetRandomBatteryTypesResponse);
   rpc getBatteryTerminalLayouts(GetBatteryTerminalLayoutsRequest) returns (GetBatteryTerminalLayoutsResponse);
@@ -63,9 +65,9 @@ message BatterySpecs {
   int32 terminalLayoutId = 3;
   int32 tierId = 4;
   string composition = 5;
-  string safetyInfo = 6;
-  double minVoltage = 7;
-  double maxVoltage = 8;
-  double minCurrent = 9;
-  double maxCurrent = 10;
+  google.protobuf.StringValue optional_safetyInfo = 6;
+  google.protobuf.DoubleValue optional_minVoltage = 7;
+  google.protobuf.DoubleValue optional_maxVoltage = 8;
+  google.protobuf.DoubleValue optional_minCurrent = 9;
+  google.protobuf.DoubleValue optional_maxCurrent = 10;
 }

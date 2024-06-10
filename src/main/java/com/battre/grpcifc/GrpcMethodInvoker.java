@@ -8,9 +8,12 @@ import com.battre.stubs.services.TriageSvcGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 import io.grpc.stub.AbstractStub;
+import io.grpc.stub.StreamObserver;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 public class GrpcMethodInvoker {
@@ -21,7 +24,7 @@ public class GrpcMethodInvoker {
         this.discoveryClientAdapter = discoveryClientAdapter;
     }
 
-    public <ReqT, RespT> void callMethod(
+    public <ReqT, RespT> void invokeMethod(
             String serviceName,
             String methodName,
             ReqT request,
@@ -50,6 +53,43 @@ public class GrpcMethodInvoker {
         }
     }
 
+    public <ReqT, RespT> RespT invokeNonblock(String serviceName, String methodName, ReqT request) {
+        CompletableFuture<RespT> responseFuture = new CompletableFuture<>();
+        StreamObserver<RespT> responseObserver = new StreamObserver<>() {
+            @Override
+            public void onNext(RespT response) {
+                responseFuture.complete(response);
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                logger.severe(methodName + "() errored: " + t.getMessage());
+                responseFuture.completeExceptionally(t);
+            }
+
+            @Override
+            public void onCompleted() {
+                logger.info(methodName + "() completed");
+            }
+        };
+
+        invokeMethod(
+                serviceName,
+                methodName,
+                request,
+                responseObserver
+        );
+
+        try {
+            RespT response = responseFuture.get(5, TimeUnit.SECONDS);
+            logger.info(methodName + "() response: " + response.toString());
+            return response;
+        } catch (Exception e) {
+            logger.severe(methodName + "() responseFuture error: " + e.getMessage());
+            return null;
+        }
+    }
+
     private ManagedChannel createChannel(String serviceUrl) {
         // Extract host and port from service URL
         String[] parts = serviceUrl.split(":");
@@ -62,7 +102,7 @@ public class GrpcMethodInvoker {
                 .build();
     }
 
-    public String getServiceUrl(String serviceName) {
+    private String getServiceUrl(String serviceName) {
         String serviceUrl = discoveryClientAdapter.getServiceUrl(serviceName);
 
         logger.info("For service name [" + serviceName + "] URL formed: " + serviceUrl);

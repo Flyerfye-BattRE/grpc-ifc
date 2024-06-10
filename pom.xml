@@ -5,7 +5,7 @@
 
 	<groupId>com.battre</groupId>
 	<artifactId>grpc-ifc</artifactId>
-	<version>v0.1.6</version>
+	<version>v0.1.7</version>
 	<name>grpc-ifc</name>
 	<description>Raw protobuf files corresponding to java model and service classes for BattRe</description>
 	<packaging>jar</packaging>
@@ -84,6 +84,14 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>9</source>
+					<target>9</target>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

@@ -5,6 +5,8 @@ package com.battre.stubs.opssvc;
 option java_package = "com.battre.stubs.services";
 option java_multiple_files = true;
 
+import "google/protobuf/wrappers.proto";
+
 service OpsSvc {
   rpc processIntakeBatteryOrder(ProcessIntakeBatteryOrderRequest) returns (ProcessIntakeBatteryOrderResponse);
   rpc updateBatteryStatus(UpdateBatteryStatusRequest) returns (UpdateBatteryStatusResponse);
@@ -79,8 +81,8 @@ message Battery {
   BatteryStatus batteryStatus = 2;
   int32 batteryTypeId = 3;
   int32 intakeOrderId = 4;
-  int32 holdId = 5;
-  int32 outputOrderId = 6;
+  google.protobuf.Int32Value optional_holdId = 5;
+  google.protobuf.Int32Value optional_outputOrderId = 6;
 }
 
 message DestroyBatteryRequest {
