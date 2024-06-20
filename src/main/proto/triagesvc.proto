@@ -14,4 +14,14 @@ message GenerateIntakeBatteryOrderRequest {
 
 message GenerateIntakeBatteryOrderResponse {
   bool success = 1;
+  GenerateOrderStatus status = 2;
+}
+
+enum GenerateOrderStatus {
+  UNKNOWN_ERR = 0;
+  SUCCESS = 1;
+  OPSSVC_CREATE_RECORD_ERR = 2;
+  STORAGESVC_STORE_BATTERIES_ERR = 3;
+  LABSVC_BACKLOG_ERR = 4;
+  SPECSVC_GENBATTERIES_ERR = 5;
 }

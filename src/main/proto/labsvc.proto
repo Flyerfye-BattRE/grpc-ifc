@@ -18,8 +18,8 @@ service LabSvc {
   rpc getRefurbPlans(GetRefurbPlansRequest) returns (GetRefurbPlansResponse);
   rpc changeBatteryTesterPriority(ChangeBatteryTesterPriorityRequest) returns (ChangeBatteryTesterPriorityResponse);
   rpc changeBatteryRefurbPriority(ChangeBatteryRefurbPriorityRequest) returns (ChangeBatteryRefurbPriorityResponse);
-  rpc getTesterMaintenanceLogs(GetTesterMaintenanceLogsRequest) returns (GetTesterMaintenanceLogsResponse);
-  rpc getRefurbMaintenanceLogs(GetRefurbMaintenanceLogsRequest) returns (GetRefurbMaintenanceLogsResponse);
+  rpc getTesterStnInfo(GetTesterStnInfoRequest) returns (GetTesterStnInfoResponse);
+  rpc getRefurbStnInfo(GetRefurbStnInfoRequest) returns (GetRefurbStnInfoResponse);
   rpc removeLabBattery(RemoveLabBatteryRequest) returns (RemoveLabBatteryResponse);
 }
 
@@ -124,10 +124,10 @@ message ChangeBatteryRefurbPriorityResponse {
   bool success = 1;
 }
 
-message GetTesterMaintenanceLogsRequest {
+message GetTesterStnInfoRequest {
 }
 
-message GetTesterMaintenanceLogsResponse {
+message GetTesterStnInfoResponse {
   repeated TesterStation testerStationList = 1;
 }
 
@@ -141,10 +141,10 @@ message TesterStation {
   google.protobuf.Timestamp nextCalibrationDate = 7;
 }
 
-message GetRefurbMaintenanceLogsRequest {
+message GetRefurbStnInfoRequest {
 }
 
-message GetRefurbMaintenanceLogsResponse {
+message GetRefurbStnInfoResponse {
   repeated RefurbStation refurbStationList = 1;
 }
 
