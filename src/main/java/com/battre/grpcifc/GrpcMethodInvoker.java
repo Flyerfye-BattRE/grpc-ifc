@@ -7,13 +7,16 @@ import com.battre.stubs.services.StorageSvcGrpc;
 import com.battre.stubs.services.TriageSvcGrpc;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+import io.grpc.StatusRuntimeException;
 import io.grpc.stub.AbstractStub;
 import io.grpc.stub.StreamObserver;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.logging.Logger;
 
 public class GrpcMethodInvoker {
@@ -26,12 +29,11 @@ public class GrpcMethodInvoker {
 
     public <ReqT, RespT> void invokeMethod(
             String serviceName,
+            ManagedChannel channel,
             String methodName,
             ReqT request,
             RespT response
     ) {
-        String serviceUrl = getServiceUrl(serviceName);
-        ManagedChannel channel = createChannel(serviceUrl);
         try {
             // Create a stub for the specified service
             AbstractStub<?> stub = createStub(channel, serviceName);
@@ -42,14 +44,8 @@ public class GrpcMethodInvoker {
             // Call the method using reflection and pass the request object
             // @SuppressWarnings("unchecked")
             method.invoke(stub, request, response);
-        } catch (NoSuchMethodException e) {
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } finally {
-            channel.shutdown(); // Close the channel
         }
     }
 
@@ -73,28 +69,54 @@ public class GrpcMethodInvoker {
             }
         };
 
+        String serviceUrl = getServiceUrl(serviceName);
+        ManagedChannel channel = createChannel(serviceUrl);
+
         invokeMethod(
                 serviceName,
+                channel,
                 methodName,
                 request,
                 responseObserver
         );
 
         try {
-            RespT response = responseFuture.get(5, TimeUnit.SECONDS);
+            RespT response = responseFuture.get(10, TimeUnit.SECONDS);
             logger.info(methodName + "() response: " + response.toString());
             return response;
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();  // Reset the interrupted status
+            logger.warning(methodName + "() Thread interrupted: " + e.getMessage());
+        } catch (TimeoutException e) {
+            logger.warning(methodName + "() Timeout waiting for response: " + e.getMessage());
+        } catch (ExecutionException e) {
+            // Get the actual cause of the exception
+            Throwable cause = e.getCause();
+
+            if (cause instanceof StatusRuntimeException) {
+                StatusRuntimeException statusException = (StatusRuntimeException) cause;
+                logger.severe(methodName + "() gRPC StatusRuntimeException: " + statusException.getStatus());
+                statusException.printStackTrace();
+            } else {
+                logger.severe(methodName + "() ExecutionException: " + cause.getMessage());
+                cause.printStackTrace();
+            }
         } catch (Exception e) {
-            logger.severe(methodName + "() responseFuture error: " + e.getMessage());
-            return null;
+            // Handle any other unexpected exceptions
+            logger.severe(methodName + "() Unexpected exception: " + e.getMessage());
+            e.printStackTrace();
+        } finally {
+            channel.shutdown(); // Close the channel
         }
+
+        return null;  // Return null or handle appropriately based on your application logic
     }
 
     private ManagedChannel createChannel(String serviceUrl) {
         // Extract host and port from service URL
         String[] parts = serviceUrl.split(":");
-        String host = parts[1].substring(2); // Remove slashes from host
-        int port = Integer.parseInt(parts[2]) + 5; // gRPC port will be server port + 5
+        String host = parts[0];
+        int port = Integer.parseInt(parts[1]); // gRPC port will be server port + 5
 
         // Create gRPC channel
         return ManagedChannelBuilder.forAddress(host, port)
