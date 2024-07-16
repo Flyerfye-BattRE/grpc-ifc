@@ -12,6 +12,7 @@ service SpecSvc {
   rpc getBatteryTerminalLayouts(GetBatteryTerminalLayoutsRequest) returns (GetBatteryTerminalLayoutsResponse);
   rpc getAllBatterySpecs(GetAllBatterySpecsRequest) returns (GetAllBatterySpecsResponse);
   rpc getBatteryTiers(GetBatteryTiersRequest) returns (GetBatteryTiersResponse);
+  rpc getSpecSvcOverview(GetSpecSvcOverviewRequest) returns (GetSpecSvcOverviewResponse);
 }
 
 message GetRandomBatteryTypesRequest {
@@ -61,13 +62,36 @@ message GetAllBatterySpecsResponse {
 
 message BatterySpecs {
   int32 batteryTypeId = 1;
-  string mfc = 2;
-  int32 terminalLayoutId = 3;
-  int32 tierId = 4;
-  string composition = 5;
-  google.protobuf.StringValue optional_safetyInfo = 6;
-  google.protobuf.DoubleValue optional_minVoltage = 7;
-  google.protobuf.DoubleValue optional_maxVoltage = 8;
-  google.protobuf.DoubleValue optional_minCurrent = 9;
-  google.protobuf.DoubleValue optional_maxCurrent = 10;
+  string batteryName = 2;
+  string mfc = 3;
+  int32 terminalLayoutId = 4;
+  string tierLabel = 5;
+  string composition = 6;
+  google.protobuf.StringValue optional_safetyInfo = 7;
+  google.protobuf.DoubleValue optional_minVoltage = 8;
+  google.protobuf.DoubleValue optional_maxVoltage = 9;
+  google.protobuf.DoubleValue optional_minCurrent = 10;
+  google.protobuf.DoubleValue optional_maxCurrent = 11;
+}
+
+message GetSpecSvcOverviewRequest {
+}
+
+message GetSpecSvcOverviewResponse {
+  int32 specsCount = 1;
+  double minVoltage = 2;
+  double maxVoltage = 3;
+  double minCurrent = 4;
+  double maxCurrent = 5;
+  repeated TierCount tierCountList = 6;
+}
+
+
+message TierCount {
+  string tier = 1;
+  int32 count = 2;
+  double minVoltage = 3;
+  double maxVoltage = 4;
+  double minCurrent = 5;
+  double maxCurrent = 6;
 }

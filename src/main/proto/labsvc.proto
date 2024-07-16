@@ -21,6 +21,7 @@ service LabSvc {
   rpc getTesterStnInfo(GetTesterStnInfoRequest) returns (GetTesterStnInfoResponse);
   rpc getRefurbStnInfo(GetRefurbStnInfoRequest) returns (GetRefurbStnInfoResponse);
   rpc removeLabBattery(RemoveLabBatteryRequest) returns (RemoveLabBatteryResponse);
+  rpc getLabPlanStatusCounts(GetLabPlanStatusCountsRequest) returns (GetLabPlanStatusCountsResponse);
 }
 
 message BatteryIdType {
@@ -40,7 +41,7 @@ message GetLabPlansRequest {
 }
 
 message GetLabPlansResponse {
-  repeated LabPlan labPlanList= 1;
+  repeated LabPlan labPlanList = 1;
 }
 
 message LabPlan {
@@ -57,11 +58,11 @@ enum LabPlanStatus {
   UNKNOWN = 0;
   TESTER_BACKLOG_NEW = 1;
   TESTER_BACKLOG_RETRY = 2;
-  TESTER_REJECTED = 3;
+  TESTER_FAILED = 3;
   REFURB_BACKLOG_NEW = 4;
   REFURB_BACKLOG_CONT = 5;
   REFURB_BACKLOG_RETRY = 6;
-  REFURB_REJECTED = 7;
+  REFURB_FAILED = 7;
   PASS = 8;
   DESTROYED = 9;
   LOST = 10;
@@ -71,7 +72,7 @@ message GetTesterBacklogRequest {
 }
 
 message GetTesterBacklogResponse {
-  repeated TesterBacklog testerBacklogList= 1;
+  repeated TesterBacklog testerBacklogList = 1;
 }
 
 message TesterBacklog {
@@ -86,7 +87,7 @@ message GetRefurbPlansRequest {
 }
 
 message GetRefurbPlansResponse {
-  repeated RefurbPlan refurbPlanList= 1;
+  repeated RefurbPlan refurbPlanList = 1;
 }
 
 message RefurbPlan {
@@ -172,4 +173,16 @@ message RemoveLabBatteryRequest {
 
 message RemoveLabBatteryResponse {
   bool success = 1;
+}
+
+message GetLabPlanStatusCountsRequest {
+}
+
+message GetLabPlanStatusCountsResponse {
+  repeated LabPlanStatusCount labPlanStatusCountList = 1;
+}
+
+message LabPlanStatusCount {
+  LabPlanStatus labPlanStatus = 1;
+  int32 count = 2;
 }

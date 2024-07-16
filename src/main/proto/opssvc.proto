@@ -18,6 +18,7 @@ service OpsSvc {
   rpc addCustomer(AddCustomerRequest) returns (AddCustomerResponse);
   rpc removeCustomer(RemoveCustomerRequest) returns (RemoveCustomerResponse);
   rpc updateCustomer(UpdateCustomerRequest) returns (UpdateCustomerResponse);
+  rpc getOpsSvcOverview(GetOpsSvcOverviewRequest) returns (GetOpsSvcOverviewResponse);
 }
 
 message BatteryTypeTierCount {
@@ -141,4 +142,17 @@ message UpdateCustomerRequest {
 
 message UpdateCustomerResponse {
   bool success = 1;
+}
+
+message GetOpsSvcOverviewRequest {
+}
+
+message GetOpsSvcOverviewResponse {
+  int32 customerCount = 1;
+  repeated BatteryStatusCount batteryStatusCountList = 2;
+}
+
+message BatteryStatusCount {
+  BatteryStatus batteryStatus = 1;
+  int32 count = 2;
 }

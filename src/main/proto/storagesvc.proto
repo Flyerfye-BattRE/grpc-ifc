@@ -5,6 +5,8 @@ package com.battre.stubs.storagesvc;
 option java_package = "com.battre.stubs.services";
 option java_multiple_files = true;
 
+import "google/protobuf/wrappers.proto";
+
 service StorageSvc {
   rpc tryStoreBatteries(StoreBatteryRequest) returns (StoreBatteryResponse);
   rpc removeStorageBattery(RemoveStorageBatteryRequest) returns (RemoveStorageBatteryResponse);
@@ -22,7 +24,7 @@ message StoreBatteryRequest {
 }
 
 message StoreBatteryResponse {
-    bool success = 1;
+  bool success = 1;
 }
 
 message RemoveStorageBatteryRequest {
@@ -42,6 +44,6 @@ message GetStorageStatsResponse {
 
 message TierStats {
   int32 batteryTierId = 1;
-  int32 availStorage = 2;
+  google.protobuf.Int32Value usedStorage = 2;
   int32 capacity = 3;
 }
