@@ -64,7 +64,7 @@ message BatteryIdStatus {
 }
 
 message UpdateBatteryStatusRequest {
-  BatteryIdStatus battery = 1;
+  BatteryIdStatus batteryIdStatus = 1;
 }
 
 message UpdateBatteryStatusResponse {
